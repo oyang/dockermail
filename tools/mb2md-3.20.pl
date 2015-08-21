@@ -130,8 +130,8 @@
 #                A single mbox file which will be converted to
 #                the destdir.
 #
-#  -R		 If defined, do not skip directories found in a mailbox 
-#		 directory, but runs recursively into each of them, 
+#  -R		 If defined, do not skip directories found in a mailbox
+#		 directory, but runs recursively into each of them,
 # 		 creating all wanted folders in Maildir.
 #		 Incompatible with '-f'
 #
@@ -266,7 +266,7 @@
 # Note that although ~/Maildir/.xxx/ and ~/Maildir/.yyyy may appear
 # as folders to the IMAP client the above commands to not generate
 # any Maildir folders of these names.  These are simply elements
-# of the names of other Maildir directories. (if you used '-R', they 
+# of the names of other Maildir directories. (if you used '-R', they
 # whill be able to act as normal folders, containing messages AND folders)
 #
 # With a separate run of this script, using just the "-s" option
@@ -347,7 +347,7 @@
 #
 #
 # Stripping mailbox extensions:
-# ============================= 
+# =============================
 #
 # If you want to convert mailboxes that came for example from
 # a Windows box than you might want to strip the extension of
@@ -361,13 +361,13 @@
 #
 # Inbox
 #      |
-#       - Trash 
+#       - Trash
 #      |       | mbx
 #      |
-#       - Sent 
+#       - Sent
 #      |       | mbx
 #      |
-#       - Drafts 
+#       - Drafts
 #              | mbx
 #
 # This is more than ugly!
@@ -443,7 +443,7 @@ elsif (defined($opts{s}))
 	# it is a subdir of the users $home
 	# if it does start with a "/" then
 	# let's take $mbroot as a absolut path
-	$opts{s} = "$homedir/$opts{s}" if ($opts{s} !~ /^\//); 
+	$opts{s} = "$homedir/$opts{s}" if ($opts{s} !~ /^\//);
 
 	# check if the given source is a mbox file
 	if (-f $opts{s})
@@ -532,7 +532,7 @@ if (defined($mbfile))
 elsif (defined($mbdir))
 {
 	print "Converting mboxdir/mbdir: $mbroot/$mbdir to maildir: $dest/\n";
-	
+
 	# Now set our source directory
 	my $sourcedir = "$mbroot/$mbdir";
 
@@ -541,7 +541,7 @@ elsif (defined($mbdir))
 	-e $sourcedir or die("Fatal: MBDIR directory $sourcedir/ does not exist.\n");
 	-d $sourcedir or die("Fatal: MBDIR $sourcedir is not a directory.\n");
 
-	
+
 	&convertit($mbdir,"");
 }
 # Else, let's work in $mbroot
@@ -572,7 +572,7 @@ else
 			print "Skipping $mbroot/$sourcefile : not a mbox file\n";
 			next;
 		}
-		else 
+		else
 		{
 			&convertit($sourcefile,"");
 		}
@@ -589,8 +589,8 @@ exit 0;
 
 # The isamailboxfile function
 # ----------------------
-# 
-# Here we check if the file is a mailbox file, not an address-book or 
+#
+# Here we check if the file is a mailbox file, not an address-book or
 # something else.
 # If file is empty, we say it is a mbox, to create it empty.
 #
@@ -614,14 +614,14 @@ sub isamailboxfile {
 # The convertit function
 # -----------------------
 #
-# This function creates all subdirs in maildir, and calls convert() 
+# This function creates all subdirs in maildir, and calls convert()
 # for each mbox file.
 # Yes, it becomes the 'main loop' :)
 sub convertit
 {
 	# Get subdir as argument
 	my ($dir,$oldpath) = @_;
-	
+
 	$oldpath =~ s/\/\///;
 
 	# Skip files beginning with '.' since they are
@@ -639,18 +639,18 @@ sub convertit
 	# Maildir. Therefore we convert them to _'s
 	$temppath =~ s/\./\_/g;
 	$destinationdir =~ s/\./\_/g;
-	
+
 	# Appending $oldpath => path is only missing $dest
 	$destinationdir = "$temppath.$destinationdir";
 
 	# Converting '/' to '.' in $destinationdir
 	$destinationdir =~s/\/+/\./g;
-	
+
 	# source dir
 	my $srcdir="$mbroot/$oldpath/$dir";
 
 	printf("convertit(): Converting $dir in $mbroot/$oldpath to $dest/$destinationdir\n");
-	&maildirmake("$dest/$destinationdir");
+	#&maildirmake("$dest/$destinationdir");
 	print("destination = $destinationdir\n");
 	if (-d $srcdir) {
 		opendir(SUBDIR, "$srcdir") or die "can't open $srcdir !\n";
@@ -661,7 +661,7 @@ sub convertit
 			print("Sub: $_\n");
 			print("convertit($_,\"$oldpath/$dir\")\n");
 			&convertit($_,"$oldpath/$dir");
-		} 
+		}
 	} else {
 		# Source file verifs ....
 		#
@@ -685,14 +685,14 @@ sub convertit
 # The maildirmake function
 # ------------------------
 #
-# It does the same thing that the maildirmake binary that 
+# It does the same thing that the maildirmake binary that
 # comes with courier-imap distribution
 #
 sub maildirmake
 {
 	foreach(@_) {
 		-d $_ or mkdir $_,0700 or die("Fatal: Directory $_ doesn't exist and can't be created.\n");
-	
+
 		-d "$_/tmp" or mkdir("$_/tmp",0700) or die("Fatal: Unable to make $_/tmp/ subdirectory.\n");
 		-d "$_/new" or mkdir("$_/new",0700) or die("Fatal: Unable to make $_/new/ subdirectory.\n");
 		-d "$_/cur" or mkdir("$_/cur",0700) or die("Fatal: Unable to make $_/cur/ subdirectory.\n");
@@ -727,8 +727,8 @@ sub inlist
 
 	return $valid;
 }
-	
-# 
+
+#
 
 # The convert function
 # ---------------------
@@ -740,6 +740,10 @@ sub convert
 {
 	# get the source and destination as arguments
 	my ($mbox, $maildir) = @_;
+
+    if ($maildir =~ /(.*)\.mbox$/) {
+        $maildir = $1;
+    }
 
 	printf("Source Mbox is $mbox\n");
         printf("Target Maildir is $maildir \n") ;
@@ -1004,7 +1008,7 @@ sub convert
 
             if ( /^From /
 		&& $previous_line_was_empty
-		&& (!defined $contentlength) 
+		&& (!defined $contentlength)
 	       )
             {
                             # We are reading the "From " line which has an
@@ -1154,7 +1158,7 @@ sub convert
                             # to touch the file after we have closed it.
 
                 $receivedate = $fromline;
-		
+
                             # Debugging lines:
                             #
                             # print "$receivedate is the receivedate of message $messagecount.\n";
