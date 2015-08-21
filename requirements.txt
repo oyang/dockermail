@@ -1,0 +1,5 @@
+ecdsa==0.13
+Fabric==1.10.2
+paramiko==1.15.2
+passlib==1.6.5
+pycrypto==2.6.1
