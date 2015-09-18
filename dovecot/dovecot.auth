@@ -1,14 +1,12 @@
 auth_mechanisms = plain login
 
 passdb {
-   driver = passwd-file
-   args = /etc/dovecot/passwd
+   driver = sql
+   args = /etc/dovecot/sql.conf.ext
 }
 
 
 userdb {
-    driver = static
-    args = uid=vmail gid=vmail home=/srv/vmail/%d/%n allow_all_users=yes
+    driver = sql
+    args = /etc/dovecot/sql.conf.ext
 }
-
-

@@ -33,4 +33,4 @@ RUN apt-get clean
 
 ADD ./domains /domains
 ADD ./aliases /aliases
-ADD ./passwords /passwords
+#ADD ./passwords /passwords

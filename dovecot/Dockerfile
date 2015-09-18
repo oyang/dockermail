@@ -15,6 +15,12 @@ RUN apt-get install -y --force-yes postgrey
 # Install dovecot as IMAP server
 RUN apt-get install -y --force-yes dovecot-imapd
 
+# Install SQLite3
+RUN apt-get install -y --force-yes sqlite3
+
+# Install dovecot-sqlite
+RUN apt-get install -y --force-yes dovecot-sqlite
+
 # postfix configuration
 RUN echo "mail.docker.container" > /etc/mailname
 ADD ./postfix.main.cf /etc/postfix/main.cf
@@ -52,12 +58,15 @@ ADD ./dovecot.imap /etc/dovecot/conf.d/20-imap.conf
 # add verbose logging
 #ADD ./internal/dovecot.logging /etc/dovecot/conf.d/10-logging.conf
 
+ADD ./sql.conf.ext /etc/dovecot/sql.conf.ext
+ADD ./enron_users.sqlite3 /etc/dovecot/enron_users.sqlite3
+
 # Add password file
-RUN cp /passwords /etc/dovecot/passwd
+#RUN cp /passwords /etc/dovecot/passwd
 
 # i'm not sure what expose actually does, so its mainly here for documentation
 # smtp port for incoming mail
-EXPOSE 25 
+EXPOSE 25
 # imap port
 EXPOSE 143
 # smtp port for outgoing
@@ -68,4 +77,3 @@ EXPOSE 587
 
 # start necessary services for operation (dovecot -F starts dovecot in the foreground to prevent container exit)
 ENTRYPOINT chown -R vmail:vmail /srv/vmail; service rsyslog start; service postgrey start; service postfix start; dovecot -F
-
