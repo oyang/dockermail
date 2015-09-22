@@ -19,8 +19,8 @@ default_pass_scheme = SHA256-CRYPT
 password_query = SELECT userid AS username, domain, password \
   FROM users WHERE userid = '%n' AND domain = '%d'
 
-user_query = SELECT userid AS username, home, uid, vid \
+user_query = SELECT userid AS username \
   FROM users where userid = '%n' AND domain = '%d'
- 
+
 # Query to get a list of all usernames.
 iterate_query = SELECT userid AS username, domain FROM users

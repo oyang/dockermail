@@ -9,4 +9,6 @@ passdb {
 userdb {
     driver = sql
     args = /etc/dovecot/sql.conf.ext
+
+    default_fields = uid=vmail gid=vmail home=/srv/vmail/%d/%n mail=maildir:/srv/vmail/%d/%n:INBOX=/srv/vmail/%d/%n/inbox:LAYOUT=fs
 }
