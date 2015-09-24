@@ -34,7 +34,7 @@ class MaildirConverter:
         old_message_full_path = os.path.join(old_sub_folder_abspath, message)
 
         new_message_name = self.get_message_name(count)
-        new_message_full_path = os.path.join(new_sub_folder_abspath, 'cur', new_message_name)
+        new_message_full_path = os.path.join(new_sub_folder_abspath, 'new', new_message_name)
 
         try:
             shutil.copy(old_message_full_path, new_message_full_path)
