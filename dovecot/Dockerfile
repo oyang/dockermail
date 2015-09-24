@@ -44,7 +44,7 @@ RUN postmap /etc/postfix/virtual-mailbox-maps
 
 # add user vmail who own all mail folders
 RUN groupadd -g 5000 vmail
-RUN useradd -g vmail -u 5000 vmail -d /srv/vmail -m
+RUN useradd -g vmail -u 1000 vmail -d /srv/vmail -m
 RUN chown -R vmail:vmail /srv/vmail
 RUN chmod u+w /srv/vmail
 
@@ -55,8 +55,7 @@ ADD ./dovecot.auth /etc/dovecot/conf.d/10-auth.conf
 ADD ./dovecot.master /etc/dovecot/conf.d/10-master.conf
 ADD ./dovecot.lda /etc/dovecot/conf.d/15-lda.conf
 ADD ./dovecot.imap /etc/dovecot/conf.d/20-imap.conf
-# add verbose logging
-#ADD ./internal/dovecot.logging /etc/dovecot/conf.d/10-logging.conf
+ADD ./dovecot.logging /etc/dovecot/conf.d/10-logging.conf
 
 ADD ./sql.conf.ext /etc/dovecot/sql.conf.ext
 ADD ./enron_users.sqlite3 /etc/dovecot/enron_users.sqlite3

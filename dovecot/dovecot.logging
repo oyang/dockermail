@@ -1,2 +1,6 @@
-auth_verbose = yes
-auth_debug = yes
+# Disable log file cause we can not rename file with colon, this will throw lots of error messages
+# and will fulfill disk space quickly
+log_path = /dev/null
+
+auth_verbose = no
+auth_debug = no
