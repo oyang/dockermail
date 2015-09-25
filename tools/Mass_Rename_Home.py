@@ -17,7 +17,8 @@ class MassRenameHome:
 
     def get_home_mapping(self):
         old_new_home_mapping = {}
-        with open('email_address.txt', 'r') as email_address:
+        email_address_source_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'email_address.txt')
+        with open(email_address_source_path, 'r') as email_address:
             for line in email_address:
                 if line.find('|') >= 0:
                     old_new = line.split('|')
@@ -29,9 +30,8 @@ class MassRenameHome:
     def run(self):
         old_new_home_mapping = self.get_home_mapping()
 
-        os.chdir(working_dir)
+        os.chdir(self.working_dir)
         self.rename_mass_home(old_new_home_mapping)
-
 
 
 if __name__ == '__main__':
