@@ -41,6 +41,18 @@ class MaildirConverter:
         except (IOError, os.error) as e:
             print 'Can not convert message: {} with error: {}'.format(old_message_full_path, e)
 
+    def get_home_mapping(self):
+        old_new_home_mapping = {}
+        email_address_source_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'email_address.txt')
+        with open(email_address_source_path, 'r') as email_address:
+            for line in email_address:
+                if line.find('|') >= 0:
+                    old_new = line.split('|')
+                    old_new_home = old_new[1].split('@')
+                    old_new_home_mapping[old_new[0]] = old_new_home[0]
+
+        return old_new_home_mapping
+
     def run(self):
         if not os.path.isdir(self.from_dir):
             print 'Not a valid from dir: {}'.format(self.from_dir)
@@ -49,23 +61,26 @@ class MaildirConverter:
         if not os.path.isdir(self.to_dir):
             os.makedirs(self.to_dir)
 
+        old_new_home_mapping = self.get_home_mapping()
+
         print 'started'
         for user_home in os.listdir(self.from_dir):
             if not os.path.isdir(os.path.join(self.from_dir, user_home)):
                 print '{} is not a dir!'.format(user_home)
                 continue
 
+            if not user_home in old_new_home_mapping.keys():
+                print 'Can not find email address mapping for user home:{}!'.format(user_home)
+                continue
+
             old_user_home_abspath = os.path.join(self.from_dir, user_home)
-            new_user_home_abspath = os.path.join(self.to_dir, user_home)
+            new_user_home_abspath = os.path.join(self.to_dir, old_new_home_mapping[user_home])
             os.makedirs(new_user_home_abspath)
             os.chdir(old_user_home_abspath)
 
             for root, folders, messages in os.walk('.'):
                 old_sub_folder_abspath = os.path.join(old_user_home_abspath, root)
                 new_sub_folder_abspath = os.path.join(new_user_home_abspath, root)
-                #print 'current root is {}'.format(root)
-                #print 'current old_sub_folder is: {}'.format(old_sub_folder_abspath)
-                #print 'current new_sub_folder is: {}'.format(new_sub_folder_abspath)
 
                 if root != '.':
                     self.create_folder_tree(new_sub_folder_abspath)
@@ -78,7 +93,7 @@ class MaildirConverter:
 
 if __name__ == '__main__':
     from_dir = '/Volumes/My Passport/Enron_Email_Dataset/orig_maildir'
-    to_dir   = '/Volumes/My Passport/Enron_Email_Dataset/convert_maildir_02'
+    to_dir   = '/Volumes/My Passport/Enron_Email_Dataset/convert_maildir_03'
 
     maildir_converter = MaildirConverter(from_dir, to_dir)
     maildir_converter.run()
